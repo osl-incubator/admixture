@@ -1,0 +1,613 @@
+[
+  {
+    "objectID": "api.html",
+    "href": "api.html",
+    "title": "API reference",
+    "section": "",
+    "text": "The top-level package exports:\nfrom admixture import (\n    OpenAdmixtureRunner,\n    OpenAdmixtureResult,\n    default_julia_project_dir,\n    run_openadmixture,\n    setup,\n)",
+    "crumbs": [
+      "Home",
+      "API reference"
+    ]
+  },
+  {
+    "objectID": "api.html#public-api",
+    "href": "api.html#public-api",
+    "title": "API reference",
+    "section": "",
+    "text": "The top-level package exports:\nfrom admixture import (\n    OpenAdmixtureRunner,\n    OpenAdmixtureResult,\n    default_julia_project_dir,\n    run_openadmixture,\n    setup,\n)",
+    "crumbs": [
+      "Home",
+      "API reference"
+    ]
+  },
+  {
+    "objectID": "api.html#openadmixturerunner",
+    "href": "api.html#openadmixturerunner",
+    "title": "API reference",
+    "section": "OpenAdmixtureRunner",
+    "text": "OpenAdmixtureRunner\nOpenAdmixtureRunner(\n    julia=\"julia\",\n    install_if_missing=False,\n    timeout=None,\n)\nParameters:\n\njulia: executable name or explicit executable path.\ninstall_if_missing: if True, instantiate the packaged Julia project when OpenADMIXTURE.jl cannot be imported.\ntimeout: optional subprocess timeout in seconds.\n\nUseful methods:\n\ncheck_julia(): return a JuliaInfo object with executable and version.\ncheck_openadmixture(): return whether OpenADMIXTURE.jl imports.\nversion_info(): return Python, platform, Julia, and backend metadata.\nrun(...): execute OpenADMIXTURE.jl and return OpenAdmixtureResult.",
+    "crumbs": [
+      "Home",
+      "API reference"
+    ]
+  },
+  {
+    "objectID": "api.html#run_openadmixture",
+    "href": "api.html#run_openadmixture",
+    "title": "API reference",
+    "section": "run_openadmixture",
+    "text": "run_openadmixture\nrun_openadmixture(\n    *,\n    bfile,\n    k,\n    out_prefix,\n    julia=\"julia\",\n    install_if_missing=False,\n    timeout=None,\n    seed=None,\n    threads=None,\n    extra_args=None,\n)\nCreates an OpenAdmixtureRunner and runs it once.",
+    "crumbs": [
+      "Home",
+      "API reference"
+    ]
+  },
+  {
+    "objectID": "api.html#setup",
+    "href": "api.html#setup",
+    "title": "API reference",
+    "section": "setup",
+    "text": "setup\nimport admixture\n\nproject_dir = admixture.setup(julia=\"julia\")\nInstalls OpenADMIXTURE.jl into a Julia project and returns the project path. The path is the packaged Julia project returned by admixture.default_julia_project_dir().\nEquivalent installed command:\nadmixture setup --julia julia",
+    "crumbs": [
+      "Home",
+      "API reference"
+    ]
+  },
+  {
+    "objectID": "api.html#openadmixtureresult",
+    "href": "api.html#openadmixtureresult",
+    "title": "API reference",
+    "section": "OpenAdmixtureResult",
+    "text": "OpenAdmixtureResult\nFields:\n\nq: parsed ancestry proportions as pandas.DataFrame.\np: parsed allele frequencies as pandas.DataFrame | None.\nq_path, p_path, log_path: output file paths.\nout_prefix: requested output prefix.\nk: number of ancestries.\ncommand: Julia subprocess command tuple.\nreturncode, stdout, stderr: process execution details.\nmetadata: dictionary with input and runtime metadata.\n\nMethods:\n\nto_csv(prefix): write parsed .Q.csv and .P.csv files.\nsummary(): return compact result metadata.",
+    "crumbs": [
+      "Home",
+      "API reference"
+    ]
+  },
+  {
+    "objectID": "api.html#exceptions",
+    "href": "api.html#exceptions",
+    "title": "API reference",
+    "section": "Exceptions",
+    "text": "Exceptions\nAll package-specific exceptions inherit from OpenAdmixtureError:\n\nJuliaNotFoundError\nOpenAdmixtureNotInstalledError\nPlinkInputError\nOpenAdmixtureRunError\nOutputParseError",
+    "crumbs": [
+      "Home",
+      "API reference"
+    ]
+  },
+  {
+    "objectID": "tutorials/malariagen-data.html",
+    "href": "tutorials/malariagen-data.html",
+    "title": "Preparing data with malariagen-data",
+    "section": "",
+    "text": "A common real-world story is that the data do not begin as PLINK files. Suppose you are exploring a small panel of mosquito SNPs with malariagen-data and you want to use OpenADMIXTURE.jl for a first ancestry run. The clean boundary is:\nadmixture does not import malariagen_data in its source package. In this repository, malariagen-data is a development-only dependency used for tests and local experiments. Keeping that boundary avoids a circular dependency if malariagen-data later chooses to depend on admixture.",
+    "crumbs": [
+      "Home",
+      "Tutorials",
+      "Preparing data with malariagen-data"
+    ]
+  },
+  {
+    "objectID": "tutorials/malariagen-data.html#authenticate-only-if-you-need-real-gcs-data",
+    "href": "tutorials/malariagen-data.html#authenticate-only-if-you-need-real-gcs-data",
+    "title": "Preparing data with malariagen-data",
+    "section": "Authenticate only if you need real GCS data",
+    "text": "Authenticate only if you need real GCS data\nIf your malariagen-data workflow reads from Google Cloud Storage, authenticate first:\nmakim gcloud.auth\nFor a non-interactive service-account workflow, set:\nexport GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account.json\nThe Google account or service account must already have access to the relevant MalariaGEN bucket. A Google API key is not sufficient for this path.",
+    "crumbs": [
+      "Home",
+      "Tutorials",
+      "Preparing data with malariagen-data"
+    ]
+  },
+  {
+    "objectID": "tutorials/malariagen-data.html#export-a-small-plink-panel",
+    "href": "tutorials/malariagen-data.html#export-a-small-plink-panel",
+    "title": "Preparing data with malariagen-data",
+    "section": "Export a small PLINK panel",
+    "text": "Export a small PLINK panel\nIn a local exploration notebook, start by creating an Ag3 client. Keep the export small while you are developing the workflow: a short genomic region, a small number of SNPs, and a specific sample set.\nfrom pathlib import Path\nimport malariagen_data\n\nag3 = malariagen_data.Ag3(\n    results_cache=\"results/malariagen-cache\",\n)\n\noutput_dir = Path(\"results/ag3-plink\")\noutput_dir.mkdir(parents=True, exist_ok=True)\n\nplink_prefix = ag3.biallelic_snps_to_plink(\n    output_dir=str(output_dir),\n    region=\"2L:2,400,000-2,500,000\",\n    sample_sets=\"AG1000G-CI\",\n    n_snps=50,\n    min_minor_ac=2,\n    max_missing_an=0,\n    random_seed=42,\n    overwrite=True,\n    out=\"ag3_ci_small\",\n)\nThe returned value is a PLINK prefix. You should see three files on disk:\nfrom pathlib import Path\n\nprefix = Path(plink_prefix)\n\nfor suffix in [\"bed\", \"bim\", \"fam\"]:\n    path = Path(f\"{prefix}.{suffix}\")\n    print(path, path.exists(), path.stat().st_size)\nThis is the handoff point. Everything before this was data selection and export; everything after this is an OpenADMIXTURE run.",
+    "crumbs": [
+      "Home",
+      "Tutorials",
+      "Preparing data with malariagen-data"
+    ]
+  },
+  {
+    "objectID": "tutorials/malariagen-data.html#run-openadmixture.jl-through-the-wrapper",
+    "href": "tutorials/malariagen-data.html#run-openadmixture.jl-through-the-wrapper",
+    "title": "Preparing data with malariagen-data",
+    "section": "Run OpenADMIXTURE.jl through the wrapper",
+    "text": "Run OpenADMIXTURE.jl through the wrapper\nNow pass the prefix to admixture exactly as you would for any other PLINK data set:\nfrom pathlib import Path\nfrom admixture import OpenAdmixtureRunner\n\nrunner = OpenAdmixtureRunner(timeout=600)\n\nresult = runner.run(\n    bfile=plink_prefix,\n    k=2,\n    out_prefix=Path(\"results/openadmixture/ag3_ci_k2\"),\n    seed=42,\n    threads=4,\n)\nInspect the result in Python:\nprint(result.summary())\nprint(result.q.head())\nThe .Q table contains one row per sample and one column per ancestry component. If you want to join this back to sample metadata from malariagen-data, use the sample IDs from result.q.index as your key.",
+    "crumbs": [
+      "Home",
+      "Tutorials",
+      "Preparing data with malariagen-data"
+    ]
+  },
+  {
+    "objectID": "tutorials/malariagen-data.html#save-a-reproducible-artifact",
+    "href": "tutorials/malariagen-data.html#save-a-reproducible-artifact",
+    "title": "Preparing data with malariagen-data",
+    "section": "Save a reproducible artifact",
+    "text": "Save a reproducible artifact\nWrite parsed CSV files next to the Julia outputs:\nresult.to_csv(\"results/openadmixture/ag3_ci_k2\")\nFor a notebook or report, keep three things together:\n\nthe parameters used for biallelic_snps_to_plink;\nthe result.command tuple showing how Julia was invoked;\nthe parsed .Q and .P CSV files.\n\nThat combination makes it clear where the data came from, what model was run, and which Python objects were used downstream.",
+    "crumbs": [
+      "Home",
+      "Tutorials",
+      "Preparing data with malariagen-data"
+    ]
+  },
+  {
+    "objectID": "tutorials/malariagen-data.html#scaling-up-carefully",
+    "href": "tutorials/malariagen-data.html#scaling-up-carefully",
+    "title": "Preparing data with malariagen-data",
+    "section": "Scaling up carefully",
+    "text": "Scaling up carefully\nOnce the small run works, scale one dimension at a time:\n\nadd more SNPs;\nwiden the genomic region;\ninclude more sample sets;\ntry more values of K;\nincrease threads when running on a suitable machine.\n\nDo not start with the largest possible export. Small PLINK panels make it much easier to debug authentication, filtering, path handling, Julia setup, and result parsing before spending time on a full analysis.",
+    "crumbs": [
+      "Home",
+      "Tutorials",
+      "Preparing data with malariagen-data"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "admixture",
+    "section": "",
+    "text": "admixture provides a Python interface for running OpenADMIXTURE.jl on binary PLINK datasets and parsing the results into Python objects.",
+    "crumbs": [
+      "Home",
+      "admixture"
+    ]
+  },
+  {
+    "objectID": "index.html#what-the-wrapper-does",
+    "href": "index.html#what-the-wrapper-does",
+    "title": "admixture",
+    "section": "What the wrapper does",
+    "text": "What the wrapper does\n\nvalidates a binary PLINK .bed / .bim / .fam prefix;\nlocates Julia or accepts an explicit Julia executable path;\nchecks whether OpenADMIXTURE.jl imports in the chosen Julia environment;\nruns a packaged Julia bridge script via subprocess.run(..., shell=False);\nparses .Q, .P, and .log outputs;\nreturns an OpenAdmixtureResult with pandas.DataFrame results.",
+    "crumbs": [
+      "Home",
+      "admixture"
+    ]
+  },
+  {
+    "objectID": "index.html#minimal-example",
+    "href": "index.html#minimal-example",
+    "title": "admixture",
+    "section": "Minimal example",
+    "text": "Minimal example\nfrom admixture import OpenAdmixtureRunner\n\nrunner = OpenAdmixtureRunner()\n\nresult = runner.run(\n    bfile=\"data/example\",\n    k=3,\n    out_prefix=\"results/example_k3\",\n    seed=42,\n    threads=4,\n)\n\nprint(result.q)",
+    "crumbs": [
+      "Home",
+      "admixture"
+    ]
+  },
+  {
+    "objectID": "index.html#upstream-resources",
+    "href": "index.html#upstream-resources",
+    "title": "admixture",
+    "section": "Upstream resources",
+    "text": "Upstream resources\n\nOpenADMIXTURE.jl: https://github.com/OpenMendel/OpenADMIXTURE.jl\nOpenMendel: https://openmendel.github.io/\nOpenADMIXTURE paper: https://pmc.ncbi.nlm.nih.gov/articles/PMC9943729/",
+    "crumbs": [
+      "Home",
+      "admixture"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html",
+    "href": "troubleshooting.html",
+    "title": "Troubleshooting",
+    "section": "",
+    "text": "Install Julia from https://julialang.org/downloads/ or pass an explicit path:\nfrom admixture import OpenAdmixtureRunner\n\nrunner = OpenAdmixtureRunner(julia=\"/path/to/julia\")",
+    "crumbs": [
+      "Home",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#julia-executable-was-not-found",
+    "href": "troubleshooting.html#julia-executable-was-not-found",
+    "title": "Troubleshooting",
+    "section": "",
+    "text": "Install Julia from https://julialang.org/downloads/ or pass an explicit path:\nfrom admixture import OpenAdmixtureRunner\n\nrunner = OpenAdmixtureRunner(julia=\"/path/to/julia\")",
+    "crumbs": [
+      "Home",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#openadmixture.jl-is-not-installed",
+    "href": "troubleshooting.html#openadmixture.jl-is-not-installed",
+    "title": "Troubleshooting",
+    "section": "OpenADMIXTURE.jl is not installed",
+    "text": "OpenADMIXTURE.jl is not installed\nInstantiate the packaged Julia project:\nadmixture setup",
+    "crumbs": [
+      "Home",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#plink-files-are-missing-or-empty",
+    "href": "troubleshooting.html#plink-files-are-missing-or-empty",
+    "title": "Troubleshooting",
+    "section": "PLINK files are missing or empty",
+    "text": "PLINK files are missing or empty\nFor bfile=\"data/example\", all three files must exist and be non-empty:\ndata/example.bed\ndata/example.bim\ndata/example.fam",
+    "crumbs": [
+      "Home",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#output-files-are-missing",
+    "href": "troubleshooting.html#output-files-are-missing",
+    "title": "Troubleshooting",
+    "section": "Output files are missing",
+    "text": "Output files are missing\nThe wrapper looks for common output names such as:\n&lt;out_prefix&gt;.Q\n&lt;out_prefix&gt;.P\n&lt;out_prefix&gt;.log\n&lt;out_prefix&gt;.&lt;K&gt;.Q\n&lt;out_prefix&gt;.&lt;K&gt;.P\n&lt;out_prefix&gt;_K&lt;K&gt;.Q\n&lt;out_prefix&gt;_K&lt;K&gt;.P\nIf multiple .Q files match, remove stale files or choose a unique out_prefix.",
+    "crumbs": [
+      "Home",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#paths-with-spaces",
+    "href": "troubleshooting.html#paths-with-spaces",
+    "title": "Troubleshooting",
+    "section": "Paths with spaces",
+    "text": "Paths with spaces\nPaths with spaces are supported because the runner passes a list of subprocess arguments and uses shell=False. If you see path issues, include result.command or the raised exception text in your bug report.",
+    "crumbs": [
+      "Home",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#openadmixture-runtime-test-prerequisites",
+    "href": "troubleshooting.html#openadmixture-runtime-test-prerequisites",
+    "title": "Troubleshooting",
+    "section": "OpenADMIXTURE runtime test prerequisites",
+    "text": "OpenADMIXTURE runtime test prerequisites\nRuntime tests require Julia and OpenADMIXTURE.jl. They should fail, not skip, if either is unavailable:\npytest tests\nThe malariagen-data compatibility test skips only on Python 3.13+ because malariagen-data is unavailable there. Default tests do not read from Google Cloud Storage.\nIf you run manual experiments against real MalariaGEN data on Google Cloud Storage, you need access to the relevant bucket and Google Cloud Application Default Credentials:\nmakim gcloud.auth\nFor non-interactive local runs with a service-account JSON key, export:\nexport GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account.json\nIn GitHub Actions, a service-account JSON key can be provided in the GOOGLE_CREDENTIALS repository secret for workflows that need real MalariaGEN-GCS access. The service account must have access to the relevant bucket. Do not use a Google API key; API keys do not provide the Application Default Credentials expected by malariagen-data.",
+    "crumbs": [
+      "Home",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "development.html",
+    "href": "development.html",
+    "title": "Development",
+    "section": "",
+    "text": "conda env create -f conda/dev-linux.yaml\nconda activate admixture\nmakim setup.install\nUse conda/dev-linux.yaml, conda/dev-macos.yaml, or conda/dev-win.yaml depending on your operating system. This project uses a src/ package layout and Python 3.10+. The conda environment includes juliaup; use juliaup add release and juliaup default release if julia --version fails.",
+    "crumbs": [
+      "Home",
+      "Development"
+    ]
+  },
+  {
+    "objectID": "development.html#environment",
+    "href": "development.html#environment",
+    "title": "Development",
+    "section": "",
+    "text": "conda env create -f conda/dev-linux.yaml\nconda activate admixture\nmakim setup.install\nUse conda/dev-linux.yaml, conda/dev-macos.yaml, or conda/dev-win.yaml depending on your operating system. This project uses a src/ package layout and Python 3.10+. The conda environment includes juliaup; use juliaup add release and juliaup default release if julia --version fails.",
+    "crumbs": [
+      "Home",
+      "Development"
+    ]
+  },
+  {
+    "objectID": "development.html#tests",
+    "href": "development.html#tests",
+    "title": "Development",
+    "section": "Tests",
+    "text": "Tests\nRun the test suite:\nmakim tests.unit\nInstantiate only the packaged OpenADMIXTURE.jl Julia project:\nmakim setup.julia\nRun all tests:\nmakim tests.all\nThe default runtime test creates a tiny local PLINK data set and runs the wrapper against it. Runtime tests require Julia and OpenADMIXTURE.jl and fail when either is unavailable.\nThe malariagen-data compatibility test imports malariagen_data inside the test body only and skips only on Python 3.13+, where malariagen-data is unavailable. Default tests do not read from Google Cloud Storage.\nFor manual experiments against real MalariaGEN data, first request access to the relevant Google Cloud Storage bucket, then authenticate locally with:\nmakim gcloud.auth\nFor non-interactive local runs with a service-account JSON key:\nexport GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account.json\nFor custom GitHub Actions workflows that need real MalariaGEN-GCS access, configure the GOOGLE_CREDENTIALS repository secret with a service-account JSON key with access to MalariaGEN data on Google Cloud Storage. A Google API key is not sufficient for this path because the data client uses Application Default Credentials. This is not required by the default CI test suite.",
+    "crumbs": [
+      "Home",
+      "Development"
+    ]
+  },
+  {
+    "objectID": "development.html#lint-and-type-checks",
+    "href": "development.html#lint-and-type-checks",
+    "title": "Development",
+    "section": "Lint and type checks",
+    "text": "Lint and type checks\nmakim lint.all",
+    "crumbs": [
+      "Home",
+      "Development"
+    ]
+  },
+  {
+    "objectID": "development.html#documentation",
+    "href": "development.html#documentation",
+    "title": "Development",
+    "section": "Documentation",
+    "text": "Documentation\nRender the Quarto website:\nmakim docs.build\nPreview while editing:\nmakim docs.preview\nGenerated site files are written to docs/_site/ and should not be committed.",
+    "crumbs": [
+      "Home",
+      "Development"
+    ]
+  },
+  {
+    "objectID": "development.html#design-constraints",
+    "href": "development.html#design-constraints",
+    "title": "Development",
+    "section": "Design constraints",
+    "text": "Design constraints\n\nDo not reimplement the OpenADMIXTURE algorithm in Python.\nDo not vendor OpenADMIXTURE.jl source code.\nKeep Julia as an external runtime.\nUse subprocess.run(args, shell=False, capture_output=True, text=True).\nTreat PLINK input as a prefix with .bed, .bim, and .fam files.\nKeep parsing and validation tests independent of Julia where possible.",
+    "crumbs": [
+      "Home",
+      "Development"
+    ]
+  },
+  {
+    "objectID": "installation.html",
+    "href": "installation.html",
+    "title": "Installation",
+    "section": "",
+    "text": "From PyPI:\npip install admixture\nadmixture setup\nThe wheel includes a Julia project under the Python package at admixture/julia-env. admixture setup runs Pkg.instantiate() for that packaged project.\nThis repository uses conda and Poetry together. The conda environment is named admixture. It includes juliaup; use it to install/select a Julia runtime inside makim setup.install.\nconda env create -f conda/dev-linux.yaml\nconda activate admixture\npoetry config virtualenvs.create false\nmakim setup.install\nUse the environment file for your operating system:\n\nLinux: conda/dev-linux.yaml\nmacOS: conda/dev-macos.yaml\nWindows: conda/dev-win.yaml\n\nmakim setup.install runs poetry install --with dev and then instantiates the packaged Julia project.\nIf the environment already exists:\nconda activate admixture\nconda env update -f conda/dev-linux.yaml --prune\nmakim setup.install",
+    "crumbs": [
+      "Home",
+      "Installation"
+    ]
+  },
+  {
+    "objectID": "installation.html#python-development-environment",
+    "href": "installation.html#python-development-environment",
+    "title": "Installation",
+    "section": "",
+    "text": "From PyPI:\npip install admixture\nadmixture setup\nThe wheel includes a Julia project under the Python package at admixture/julia-env. admixture setup runs Pkg.instantiate() for that packaged project.\nThis repository uses conda and Poetry together. The conda environment is named admixture. It includes juliaup; use it to install/select a Julia runtime inside makim setup.install.\nconda env create -f conda/dev-linux.yaml\nconda activate admixture\npoetry config virtualenvs.create false\nmakim setup.install\nUse the environment file for your operating system:\n\nLinux: conda/dev-linux.yaml\nmacOS: conda/dev-macos.yaml\nWindows: conda/dev-win.yaml\n\nmakim setup.install runs poetry install --with dev and then instantiates the packaged Julia project.\nIf the environment already exists:\nconda activate admixture\nconda env update -f conda/dev-linux.yaml --prune\nmakim setup.install",
+    "crumbs": [
+      "Home",
+      "Installation"
+    ]
+  },
+  {
+    "objectID": "installation.html#quarto-documentation-engine",
+    "href": "installation.html#quarto-documentation-engine",
+    "title": "Installation",
+    "section": "Quarto documentation engine",
+    "text": "Quarto documentation engine\nThe documentation in docs/ is a Quarto website. The conda environments include the Quarto CLI.\nRender locally with:\nconda activate admixture\nquarto render docs\nPreview locally with:\nquarto preview docs",
+    "crumbs": [
+      "Home",
+      "Installation"
+    ]
+  },
+  {
+    "objectID": "installation.html#julia-runtime",
+    "href": "installation.html#julia-runtime",
+    "title": "Installation",
+    "section": "Julia runtime",
+    "text": "Julia runtime\nJulia is an external runtime, not a Python dependency. The development conda environments include juliaup, a cross-platform Julia installer and version manager from conda-forge:\njuliaup add release\njuliaup default release\njulia --version\nThe conda environment files in this repository include juliaup instead of the old julia conda package because juliaup is available on Linux, macOS, and Windows. If you are not using the provided conda environment files, install it with conda install -c conda-forge juliaup first.\nFor non-conda installs, the official Julia installer from https://julialang.org/downloads/ is also supported as long as julia is on PATH.\nYou can also pass an explicit executable path:\nfrom admixture import OpenAdmixtureRunner\n\nrunner = OpenAdmixtureRunner(julia=\"/path/to/julia\")",
+    "crumbs": [
+      "Home",
+      "Installation"
+    ]
+  },
+  {
+    "objectID": "installation.html#google-cloud-cli",
+    "href": "installation.html#google-cloud-cli",
+    "title": "Installation",
+    "section": "Google Cloud CLI",
+    "text": "Google Cloud CLI\nThe Linux and macOS conda environment files include google-cloud-sdk, which provides the gcloud command used for local malariagen-data authentication:\nmakim gcloud.auth\nThe Windows conda environment file does not include google-cloud-sdk. On Windows, install Google Cloud CLI with Google’s official installer, open a new terminal, and then authenticate:\n(New-Object Net.WebClient).DownloadFile(\n  \"https://dl.google.com/dl/cloudsdk/channels/rapid/GoogleCloudSDKInstaller.exe\",\n  \"$env:Temp\\GoogleCloudSDKInstaller.exe\"\n)\n& \"$env:Temp\\GoogleCloudSDKInstaller.exe\"\ngcloud auth application-default login\nOn Windows:\nrunner = OpenAdmixtureRunner(\n    julia=r\"C:\\Users\\you\\AppData\\Local\\Programs\\Julia-1.11.0\\bin\\julia.exe\"\n)",
+    "crumbs": [
+      "Home",
+      "Installation"
+    ]
+  },
+  {
+    "objectID": "installation.html#openadmixture.jl",
+    "href": "installation.html#openadmixture.jl",
+    "title": "Installation",
+    "section": "OpenADMIXTURE.jl",
+    "text": "OpenADMIXTURE.jl\nThe Python package ships a Julia project with Project.toml and Manifest.toml. Instantiate it with:\nadmixture setup\nFrom Poetry, use:\npoetry run admixture setup\nYou can also call the same setup helper from Python:\nimport admixture\n\nproject_dir = admixture.setup()\nThen use the runner. It always points to the packaged Julia project:\nrunner = OpenAdmixtureRunner()",
+    "crumbs": [
+      "Home",
+      "Installation"
+    ]
+  },
+  {
+    "objectID": "usage.html",
+    "href": "usage.html",
+    "title": "Usage",
+    "section": "",
+    "text": "OpenADMIXTURE.jl expects binary PLINK 1 input. A PLINK prefix such as data/example refers to these files:\ndata/example.bed\ndata/example.bim\ndata/example.fam\nPass the prefix to Python:\nbfile = \"data/example\"\nPassing data/example.bed is normalized to the same prefix when safe, but using the prefix directly is clearer.",
+    "crumbs": [
+      "Home",
+      "Usage"
+    ]
+  },
+  {
+    "objectID": "usage.html#input-data",
+    "href": "usage.html#input-data",
+    "title": "Usage",
+    "section": "",
+    "text": "OpenADMIXTURE.jl expects binary PLINK 1 input. A PLINK prefix such as data/example refers to these files:\ndata/example.bed\ndata/example.bim\ndata/example.fam\nPass the prefix to Python:\nbfile = \"data/example\"\nPassing data/example.bed is normalized to the same prefix when safe, but using the prefix directly is clearer.",
+    "crumbs": [
+      "Home",
+      "Usage"
+    ]
+  },
+  {
+    "objectID": "usage.html#running-openadmixture.jl",
+    "href": "usage.html#running-openadmixture.jl",
+    "title": "Usage",
+    "section": "Running OpenADMIXTURE.jl",
+    "text": "Running OpenADMIXTURE.jl\nfrom admixture import OpenAdmixtureRunner\n\nrunner = OpenAdmixtureRunner(\n    julia=\"julia\",\n    install_if_missing=False,\n    timeout=None,\n)\n\nresult = runner.run(\n    bfile=\"data/example\",\n    k=3,\n    out_prefix=\"results/example_k3\",\n    seed=42,\n    threads=4,\n)\nThe runner validates input files before launching Julia. It builds a command as a tuple of arguments and never shells out through a command string.",
+    "crumbs": [
+      "Home",
+      "Usage"
+    ]
+  },
+  {
+    "objectID": "usage.html#convenience-function",
+    "href": "usage.html#convenience-function",
+    "title": "Usage",
+    "section": "Convenience function",
+    "text": "Convenience function\nfrom admixture import run_openadmixture\n\nresult = run_openadmixture(\n    bfile=\"data/example\",\n    k=3,\n    out_prefix=\"results/example_k3\",\n    seed=42,\n    threads=4,\n)",
+    "crumbs": [
+      "Home",
+      "Usage"
+    ]
+  },
+  {
+    "objectID": "usage.html#result-object",
+    "href": "usage.html#result-object",
+    "title": "Usage",
+    "section": "Result object",
+    "text": "Result object\nOpenAdmixtureResult contains parsed results and execution metadata:\nresult.q          # ancestry proportions, individuals x K\nresult.p          # allele frequencies if produced, otherwise None\nresult.q_path     # path to parsed Q file\nresult.p_path     # path to parsed P file, or None\nresult.log_path   # path to log file, or None\nresult.stdout     # captured Julia stdout\nresult.stderr     # captured Julia stderr\nresult.metadata   # input paths and runtime metadata\nWrite parsed tables to CSV:\nresult.to_csv(\"results/example_k3\")\nGet a compact summary:\nresult.summary()",
+    "crumbs": [
+      "Home",
+      "Usage"
+    ]
+  },
+  {
+    "objectID": "usage.html#optional-algorithm-arguments",
+    "href": "usage.html#optional-algorithm-arguments",
+    "title": "Usage",
+    "section": "Optional algorithm arguments",
+    "text": "Optional algorithm arguments\nThe Python wrapper exposes core arguments directly. Additional supported Julia bridge options can be passed through extra_args:\nresult = runner.run(\n    bfile=\"data/example\",\n    k=3,\n    out_prefix=\"results/example_k3\",\n    extra_args={\"max_iter\": 500, \"tol\": 1e-6},\n)\nArgument names use Python-friendly underscores and are converted to CLI flags, for example max_iter becomes --max-iter.",
+    "crumbs": [
+      "Home",
+      "Usage"
+    ]
+  },
+  {
+    "objectID": "changelog.html",
+    "href": "changelog.html",
+    "title": "Changelog",
+    "section": "",
+    "text": "The canonical changelog is maintained in the repository root:\n\nCHANGELOG.md\n\nReleases are generated by semantic-release during CI release workflows.",
+    "crumbs": [
+      "Home",
+      "Changelog"
+    ]
+  },
+  {
+    "objectID": "tutorials/first-analysis.html",
+    "href": "tutorials/first-analysis.html",
+    "title": "First analysis with a tiny PLINK fixture",
+    "section": "",
+    "text": "Imagine you have just joined a project where the population-genetics team works mostly in Python, but the ancestry model they want to use is implemented in Julia by OpenADMIXTURE.jl. Before sending a large cohort through the pipeline, you want a small end-to-end check: can Python find Julia, can OpenADMIXTURE.jl run, and can the wrapper parse the output into familiar Python objects?\nThis tutorial uses the tiny PLINK fixture committed in the repository under tests/data/tiny-plink. The data are not biologically meaningful. They are just large enough to exercise the real runtime path without downloading data or requiring Google Cloud access.",
+    "crumbs": [
+      "Home",
+      "Tutorials",
+      "First analysis with a tiny PLINK fixture"
+    ]
+  },
+  {
+    "objectID": "tutorials/first-analysis.html#the-input-a-plink-prefix",
+    "href": "tutorials/first-analysis.html#the-input-a-plink-prefix",
+    "title": "First analysis with a tiny PLINK fixture",
+    "section": "The input: a PLINK prefix",
+    "text": "The input: a PLINK prefix\nOpenADMIXTURE.jl reads binary PLINK 1 data. PLINK data are usually referenced by a prefix, not by one file. In this tutorial the prefix is:\ntests/data/tiny-plink/tiny\nand it refers to these three files:\ntests/data/tiny-plink/tiny.bed\ntests/data/tiny-plink/tiny.bim\ntests/data/tiny-plink/tiny.fam\n\n.bed stores the genotype matrix in binary form;\n.bim stores variant metadata;\n.fam stores sample metadata.\n\nIf you want to peek at the fixture from Python, the text files are easy to read with pandas:\nfrom pathlib import Path\nimport pandas as pd\n\nprefix = Path(\"tests/data/tiny-plink/tiny\")\n\nfam = pd.read_csv(\n    f\"{prefix}.fam\",\n    sep=r\"\\s+\",\n    header=None,\n    names=[\n        \"family_id\",\n        \"individual_id\",\n        \"paternal_id\",\n        \"maternal_id\",\n        \"sex\",\n        \"phenotype\",\n    ],\n)\n\nbim = pd.read_csv(\n    f\"{prefix}.bim\",\n    sep=r\"\\s+\",\n    header=None,\n    names=[\n        \"chromosome\",\n        \"variant_id\",\n        \"cm_position\",\n        \"bp_position\",\n        \"allele_1\",\n        \"allele_2\",\n    ],\n)\n\nprint(fam.head())\nprint(bim.head())\nFor the binary .bed, use bed-reader if you want to inspect genotypes:\nfrom bed_reader import open_bed\n\nbed = open_bed(\"tests/data/tiny-plink/tiny.bed\")\n\nprint(bed.shape)      # samples x variants\nprint(bed.iid[:5])    # sample IDs from admixture.fam\nprint(bed.sid[:5])    # variant IDs from admixture.bim\n\ngenotypes = bed.read()\nprint(genotypes[:3, :5])\nYou do not need to read .bed yourself to use admixture; the wrapper only needs the prefix.",
+    "crumbs": [
+      "Home",
+      "Tutorials",
+      "First analysis with a tiny PLINK fixture"
+    ]
+  },
+  {
+    "objectID": "tutorials/first-analysis.html#a-first-k2-run",
+    "href": "tutorials/first-analysis.html#a-first-k2-run",
+    "title": "First analysis with a tiny PLINK fixture",
+    "section": "A first K=2 run",
+    "text": "A first K=2 run\nFor a smoke test we will fit K=2. In a real analysis, K is part of the scientific question: it is the number of ancestral components the model should estimate. Here it simply gives us a compact result to inspect.\nfrom pathlib import Path\nfrom admixture import OpenAdmixtureRunner\n\nbfile = Path(\"tests/data/tiny-plink/tiny\")\nout_prefix = Path(\"results/tutorials/tiny_k2\")\n\nrunner = OpenAdmixtureRunner(timeout=120)\n\nresult = runner.run(\n    bfile=bfile,\n    k=2,\n    out_prefix=out_prefix,\n    seed=42,\n    threads=1,\n)\nSeveral things happen in this one call:\n\nthe wrapper checks that tiny.bed, tiny.bim, and tiny.fam exist;\nit checks that Julia can run;\nit checks that OpenADMIXTURE.jl can be imported from the packaged Julia project;\nit launches a Julia subprocess with shell=False;\nit parses the .Q, .P, and .log outputs.\n\nThe command is stored on the result for reproducibility:\nresult.command",
+    "crumbs": [
+      "Home",
+      "Tutorials",
+      "First analysis with a tiny PLINK fixture"
+    ]
+  },
+  {
+    "objectID": "tutorials/first-analysis.html#reading-the-ancestry-proportions",
+    "href": "tutorials/first-analysis.html#reading-the-ancestry-proportions",
+    "title": "First analysis with a tiny PLINK fixture",
+    "section": "Reading the ancestry proportions",
+    "text": "Reading the ancestry proportions\nThe main output is result.q, a pandas DataFrame with one row per individual and one column per ancestry component:\nresult.q\nFor the tiny fixture, the index comes from the individual IDs in the .fam file:\nresult.q.index.tolist()\nEach row should sum to approximately one:\nresult.q.sum(axis=1)\nFor quick summaries, you can assign each sample to the component with the largest ancestry proportion:\nassignments = result.q.idxmax(axis=1)\nassignments.value_counts()\nThis is not a replacement for careful interpretation, but it is a useful first sanity check when you are building a workflow.",
+    "crumbs": [
+      "Home",
+      "Tutorials",
+      "First analysis with a tiny PLINK fixture"
+    ]
+  },
+  {
+    "objectID": "tutorials/first-analysis.html#reading-allele-frequency-output",
+    "href": "tutorials/first-analysis.html#reading-allele-frequency-output",
+    "title": "First analysis with a tiny PLINK fixture",
+    "section": "Reading allele-frequency output",
+    "text": "Reading allele-frequency output\nOpenADMIXTURE.jl may also produce a .P file. The wrapper parses it as result.p when present:\nresult.p\nFor this fixture, result.p has one row per ancestry component and one column per SNP. The parsed dimensions are also available from:\nresult.summary()",
+    "crumbs": [
+      "Home",
+      "Tutorials",
+      "First analysis with a tiny PLINK fixture"
+    ]
+  },
+  {
+    "objectID": "tutorials/first-analysis.html#saving-results-for-the-next-step",
+    "href": "tutorials/first-analysis.html#saving-results-for-the-next-step",
+    "title": "First analysis with a tiny PLINK fixture",
+    "section": "Saving results for the next step",
+    "text": "Saving results for the next step\nThe Julia output files remain on disk, but it is often convenient to export the parsed tables as CSV for reporting or downstream Python notebooks:\nresult.to_csv(\"results/tutorials/tiny_k2\")\nThis writes files like:\nresults/tutorials/tiny_k2.Q.csv\nresults/tutorials/tiny_k2.P.csv\nAt this point you have a full round trip: PLINK input, real OpenADMIXTURE.jl execution, and parsed pandas outputs.",
+    "crumbs": [
+      "Home",
+      "Tutorials",
+      "First analysis with a tiny PLINK fixture"
+    ]
+  },
+  {
+    "objectID": "tutorials/first-analysis.html#trying-another-value-of-k",
+    "href": "tutorials/first-analysis.html#trying-another-value-of-k",
+    "title": "First analysis with a tiny PLINK fixture",
+    "section": "Trying another value of K",
+    "text": "Trying another value of K\nA real analysis usually compares several values of K. You can make that explicit in a loop:\nfrom admixture import run_openadmixture\n\nfor k in [2, 3, 4]:\n    result = run_openadmixture(\n        bfile=\"tests/data/tiny-plink/tiny\",\n        k=k,\n        out_prefix=f\"results/tutorials/tiny_k{k}\",\n        seed=42,\n        threads=1,\n        timeout=120,\n    )\n    print(result.summary())\nFor the tiny fixture, the values are only a smoke test. For real data, choosing K should be guided by your sampling design, replicate runs, diagnostics, and biological interpretation.",
+    "crumbs": [
+      "Home",
+      "Tutorials",
+      "First analysis with a tiny PLINK fixture"
+    ]
+  },
+  {
+    "objectID": "tutorials/first-analysis.html#where-to-go-next",
+    "href": "tutorials/first-analysis.html#where-to-go-next",
+    "title": "First analysis with a tiny PLINK fixture",
+    "section": "Where to go next",
+    "text": "Where to go next\nOnce this tutorial works, replace the fixture prefix with your own PLINK prefix:\nresult = run_openadmixture(\n    bfile=\"data/my_cohort/my_cohort\",\n    k=3,\n    out_prefix=\"results/my_cohort_k3\",\n    seed=42,\n    threads=4,\n)\nKeep the same pattern: validate a small run first, choose clear output prefixes, and keep the result metadata with your analysis artifacts.",
+    "crumbs": [
+      "Home",
+      "Tutorials",
+      "First analysis with a tiny PLINK fixture"
+    ]
+  },
+  {
+    "objectID": "tutorials/index.html",
+    "href": "tutorials/index.html",
+    "title": "Tutorials",
+    "section": "",
+    "text": "These tutorials tell the story of a typical admixture workflow: start with a binary PLINK data set, run the upstream Julia implementation via the Python wrapper, and bring the .Q and .P outputs back into Python for inspection.\nThe package is deliberately small. It does not implement the ADMIXTURE algorithm, and it does not try to become a data-management library. Its job is to make one boundary clean: Python in, OpenADMIXTURE.jl run, Python objects out.",
+    "crumbs": [
+      "Home",
+      "Tutorials",
+      "Tutorials"
+    ]
+  },
+  {
+    "objectID": "tutorials/index.html#start-here",
+    "href": "tutorials/index.html#start-here",
+    "title": "Tutorials",
+    "section": "Start here",
+    "text": "Start here\n\nFirst analysis with a tiny PLINK fixture walks through a complete local run using the tiny fixture stored in tests/data/tiny-plink. Use this when you want to check that Python, Julia, OpenADMIXTURE.jl, and the wrapper all work together before running on real data.\nPreparing data with malariagen-data shows how a future or local analysis can use malariagen-data as a data-preparation step, export a small SNP panel to PLINK, and then pass that PLINK prefix to admixture. This is intentionally optional and requires Google Cloud Storage access for real MalariaGEN data.",
+    "crumbs": [
+      "Home",
+      "Tutorials",
+      "Tutorials"
+    ]
+  },
+  {
+    "objectID": "tutorials/index.html#what-you-need-before-following-the-tutorials",
+    "href": "tutorials/index.html#what-you-need-before-following-the-tutorials",
+    "title": "Tutorials",
+    "section": "What you need before following the tutorials",
+    "text": "What you need before following the tutorials\nInstall the Python package and instantiate the packaged Julia project:\nconda activate admixture\nmakim setup.install\nor, after installing from PyPI:\npip install admixture\nadmixture setup\nThen verify that Julia and OpenADMIXTURE.jl are visible:\nfrom admixture import OpenAdmixtureRunner\n\nrunner = OpenAdmixtureRunner()\nrunner.version_info()\nIf this fails, see Troubleshooting.",
+    "crumbs": [
+      "Home",
+      "Tutorials",
+      "Tutorials"
+    ]
+  }
+]
