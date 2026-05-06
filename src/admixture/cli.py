@@ -10,8 +10,8 @@ import sys
 from collections.abc import Callable, Sequence
 from typing import cast
 
-from .exceptions import OpenAdmixtureError
-from .setup import setup
+from admixture.exceptions import OpenAdmixtureError
+from admixture.setup import setup
 
 Command = Callable[[argparse.Namespace], int]
 

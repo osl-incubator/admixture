@@ -11,7 +11,7 @@ from typing import Iterable
 import numpy as np
 import pandas as pd
 
-from .exceptions import OutputParseError
+from admixture.exceptions import OutputParseError
 
 FAM_COLUMNS = [
     "family_id",

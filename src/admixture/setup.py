@@ -9,11 +9,11 @@ import subprocess
 from importlib.resources import files
 from pathlib import Path
 
-from .exceptions import (
+from admixture.exceptions import (
     OPENADMIXTURE_NOT_INSTALLED_MESSAGE,
     OpenAdmixtureNotInstalledError,
 )
-from .julia_env import check_openadmixture_installed, find_julia
+from admixture.julia_env import check_openadmixture_installed, find_julia
 
 
 def default_julia_project_dir() -> Path:

@@ -11,7 +11,7 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
-from .exceptions import (
+from admixture.exceptions import (
     JULIA_NOT_FOUND_MESSAGE,
     OPENADMIXTURE_NOT_INSTALLED_MESSAGE,
     JuliaNotFoundError,

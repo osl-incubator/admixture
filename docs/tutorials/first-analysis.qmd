@@ -84,8 +84,8 @@ from bed_reader import open_bed
 bed = open_bed("tests/data/tiny-plink/tiny.bed")
 
 print(bed.shape)      # samples x variants
-print(bed.iid[:5])    # sample IDs from .fam
-print(bed.sid[:5])    # variant IDs from .bim
+print(bed.iid[:5])    # sample IDs from admixture.fam
+print(bed.sid[:5])    # variant IDs from admixture.bim
 
 genotypes = bed.read()
 print(genotypes[:3, :5])
