@@ -13,7 +13,7 @@ from importlib.resources import files
 from pathlib import Path
 from typing import Any, Mapping
 
-from ._version import __version__
+from . import __version__
 from .exceptions import (
     OPENADMIXTURE_NOT_INSTALLED_MESSAGE,
     OpenAdmixtureNotInstalledError,

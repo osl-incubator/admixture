@@ -5,7 +5,7 @@ project:
 website:
   title: "admixture"
   description: "Python wrapper around OpenADMIXTURE.jl"
-  repo-url: https://github.com/malariagen-org/admixture
+  repo-url: https://github.com/osl-incubatoradmixture
   repo-actions: [source, issue]
   navbar:
     left:
@@ -29,6 +29,8 @@ website:
         text: Development
       - href: troubleshooting.qmd
         text: Troubleshooting
+      - href: changelog.qmd
+        text: Changelog
   sidebar:
     style: docked
     contents:
@@ -43,6 +45,7 @@ website:
       - api.qmd
       - development.qmd
       - troubleshooting.qmd
+      - changelog.qmd
 
 format:
   html:
