@@ -29,6 +29,8 @@ website:
         text: Development
       - href: troubleshooting.qmd
         text: Troubleshooting
+      - href: changelog.qmd
+        text: Changelog
   sidebar:
     style: docked
     contents:
@@ -43,6 +45,7 @@ website:
       - api.qmd
       - development.qmd
       - troubleshooting.qmd
+      - changelog.qmd
 
 format:
   html:

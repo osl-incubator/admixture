@@ -2,21 +2,35 @@ name: Release
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  VIRTUALENV_ACTIVATORS: "bash,python"
 
 jobs:
-  build:
+  release:
+    name: Release
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     defaults:
       run:
         shell: bash -l {0}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-version: latest
-          environment-file: conda/dev-linux.yaml
+          environment-file: conda/release.yaml
           activate-environment: admixture
           auto-update-conda: true
           conda-solver: libmamba
@@ -27,5 +41,17 @@ jobs:
           poetry config virtualenvs.create false
           poetry install --with dev
 
-      - name: Build package
-        run: makim --verbose package.build
+      - name: Run release dry-run
+        if: ${{ github.event_name != 'workflow_dispatch' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: makim --verbose release.dry
+
+      - name: Publish release
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          poetry config pypi-token.pypi "${PYPI_TOKEN}"
+          makim --verbose release.ci

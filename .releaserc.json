@@ -43,7 +43,7 @@
       "@semantic-release/changelog",
       {
         "changelogTitle": "# Release Notes\n---",
-        "changelogFile": "docs/changelog.md"
+        "changelogFile": "CHANGELOG.md"
       }
     ],
     [
@@ -64,7 +64,7 @@
       {
         "assets": [
           "pyproject.toml",
-          "docs/changelog.md",
+          "CHANGELOG.md",
           "src/admixture/__init__.py"
         ],
         "message": "chore(release): ${nextRelease.version}"
