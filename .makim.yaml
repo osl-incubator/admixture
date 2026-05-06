@@ -44,6 +44,8 @@ groups:
             type: string
             default: julia
         run: |
+          juliaup add release
+          juliaup default release
           python -m admixture.cli setup --julia "${{ args.julia }}"
 
   gcloud:
