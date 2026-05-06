@@ -6,20 +6,16 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from admixture import OpenAdmixtureRunner
+from admixture.setup import default_julia_project_dir
 
 
 def test_build_command_uses_packaged_project_and_preserves_spaces(
-    monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
     """
     title: Paths with spaces remain single subprocess arguments.
     parameters:
-      monkeypatch:
-        type: pytest.MonkeyPatch
       tmp_path:
         type: Path
     """
@@ -27,10 +23,8 @@ def test_build_command_uses_packaged_project_and_preserves_spaces(
     project_dir = tmp_path / "Julia Project"
     bfile = tmp_path / "plink data" / "example"
     out_prefix = tmp_path / "results dir" / "example_k2"
-    monkeypatch.setattr(
-        "admixture.runner.default_julia_project_dir", lambda: project_dir
-    )
     runner = OpenAdmixtureRunner(julia="julia")
+    runner.project_dir = project_dir
 
     command = runner._build_command(
         bfile=bfile,
@@ -95,23 +89,10 @@ def test_build_command_accepts_extra_args(tmp_path: Path) -> None:
     assert command[command.index("--tol") + 1] == "1e-05"
 
 
-def test_runner_uses_packaged_julia_project(
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path: Path,
-) -> None:
+def test_runner_uses_packaged_julia_project() -> None:
     """
     title: Runner defaults to the packaged Julia project directory.
-    parameters:
-      monkeypatch:
-        type: pytest.MonkeyPatch
-      tmp_path:
-        type: Path
     """
-    project_dir = tmp_path / "packaged-julia"
-    monkeypatch.setattr(
-        "admixture.runner.default_julia_project_dir", lambda: project_dir
-    )
-
     runner = OpenAdmixtureRunner()
 
-    assert runner.project_dir == project_dir
+    assert runner.project_dir == default_julia_project_dir()

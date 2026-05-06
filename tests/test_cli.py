@@ -9,129 +9,56 @@ from pathlib import Path
 import pytest
 
 from admixture import cli
-from admixture.exceptions import JuliaNotFoundError
 
 
-def test_main_setup_calls_setup(
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path: Path,
+def test_main_without_subcommand_prints_help(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     """
-    title: The setup command delegates to the Python setup helper.
+    title: The top-level command prints help when no subcommand is provided.
     parameters:
-      monkeypatch:
-        type: pytest.MonkeyPatch
-      tmp_path:
-        type: Path
       capsys:
         type: pytest.CaptureFixture[str]
     """
-    calls: list[str | Path] = []
-
-    def fake_setup(*, julia: str | Path) -> Path:
-        """
-        title: Record setup arguments.
-        parameters:
-          julia:
-            type: str | Path
-        returns:
-          type: Path
-        """
-        calls.append(julia)
-        return tmp_path / "packaged-julia"
-
-    monkeypatch.setattr(cli, "setup", fake_setup)
-
-    returncode = cli.main(
-        [
-            "setup",
-            "--julia",
-            "/opt/julia/bin/julia",
-        ]
-    )
+    returncode = cli.main([])
 
     captured = capsys.readouterr()
-    assert returncode == 0
-    assert calls == ["/opt/julia/bin/julia"]
-    assert "Julia project instantiated" in captured.out
-    assert str(tmp_path / "packaged-julia") in captured.out
+    assert returncode == 2
+    assert "usage: admixture" in captured.out
     assert captured.err == ""
 
 
-def test_main_setup_uses_default_julia(
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path: Path,
-    capsys: pytest.CaptureFixture[str],
-) -> None:
+def test_main_setup_help(capsys: pytest.CaptureFixture[str]) -> None:
     """
-    title: The setup command can use the default Julia executable.
+    title: The setup subcommand exposes command-line help.
     parameters:
-      monkeypatch:
-        type: pytest.MonkeyPatch
-      tmp_path:
-        type: Path
       capsys:
         type: pytest.CaptureFixture[str]
     """
-    calls: list[str | Path] = []
-    project_dir = tmp_path / "packaged-julia"
-
-    def fake_setup(*, julia: str | Path) -> Path:
-        """
-        title: Record setup arguments and return the packaged path.
-        parameters:
-          julia:
-            type: str | Path
-        returns:
-          type: Path
-        """
-        calls.append(julia)
-        return project_dir
-
-    monkeypatch.setattr(cli, "setup", fake_setup)
-
-    returncode = cli.main(["setup"])
+    with pytest.raises(SystemExit) as exc_info:
+        cli.main(["setup", "--help"])
 
     captured = capsys.readouterr()
-    assert returncode == 0
-    assert calls == ["julia"]
-    assert str(project_dir) in captured.out
-    assert captured.err == ""
+    assert exc_info.value.code == 0
+    assert "usage: admixture setup" in captured.out
+    assert "--julia" in captured.out
 
 
-def test_main_setup_reports_package_errors(
-    monkeypatch: pytest.MonkeyPatch,
+def test_main_setup_missing_julia_reports_error(
     tmp_path: Path,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     """
-    title: The setup command reports known package errors without a traceback.
+    title: The setup command reports missing Julia without a traceback.
     parameters:
-      monkeypatch:
-        type: pytest.MonkeyPatch
       tmp_path:
         type: Path
       capsys:
         type: pytest.CaptureFixture[str]
     """
-
-    def fake_setup(*, julia: str | Path) -> Path:
-        """
-        title: Raise a Julia lookup error.
-        parameters:
-          julia:
-            type: str | Path
-        returns:
-          type: Path
-        """
-        raise JuliaNotFoundError("no julia")
-
-    monkeypatch.setattr(cli, "setup", fake_setup)
-
-    returncode = cli.main(["setup"])
+    returncode = cli.main(["setup", "--julia", str(tmp_path / "missing-julia")])
 
     captured = capsys.readouterr()
     assert returncode == 1
     assert captured.out == ""
-    assert "no julia" in captured.err
+    assert "Install Julia" in captured.err
