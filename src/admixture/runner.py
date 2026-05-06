@@ -9,27 +9,27 @@ import re
 import subprocess
 import sys
 
+from importlib import import_module
 from importlib.resources import files
 from pathlib import Path
 from typing import Any, Mapping
 
-from . import __version__
-from .exceptions import (
+from admixture.exceptions import (
     OPENADMIXTURE_NOT_INSTALLED_MESSAGE,
     OpenAdmixtureNotInstalledError,
     OpenAdmixtureRunError,
 )
-from .julia_env import (
+from admixture.julia_env import (
     JuliaInfo,
     check_openadmixture_installed,
     find_julia,
     get_julia_version,
     get_openadmixture_version,
 )
-from .parsing import find_output_files, read_p, read_q
-from .result import OpenAdmixtureResult
-from .setup import default_julia_project_dir, setup
-from .validation import (
+from admixture.parsing import find_output_files, read_p, read_q
+from admixture.result import OpenAdmixtureResult
+from admixture.setup import default_julia_project_dir, setup
+from admixture.validation import (
     ensure_output_parent,
     validate_k,
     validate_plink_prefix,
@@ -138,7 +138,9 @@ class OpenAdmixtureRunner:
                 self.project_dir,
             )
         return {
-            "admixture_python_version": __version__,
+            "admixture_python_version": str(
+                getattr(import_module("admixture"), "__version__")
+            ),
             "python_version": sys.version.split()[0],
             "platform": platform.platform(),
             "julia_executable": str(julia_info.executable),

@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from importlib.metadata import PackageNotFoundError, version
 
-from .exceptions import (
+from admixture.exceptions import (
     JuliaNotFoundError,
     OpenAdmixtureError,
     OpenAdmixtureNotInstalledError,
@@ -14,9 +14,9 @@ from .exceptions import (
     OutputParseError,
     PlinkInputError,
 )
-from .result import OpenAdmixtureResult
-from .runner import OpenAdmixtureRunner, run_openadmixture
-from .setup import default_julia_project_dir, setup
+from admixture.result import OpenAdmixtureResult
+from admixture.runner import OpenAdmixtureRunner, run_openadmixture
+from admixture.setup import default_julia_project_dir, setup
 
 
 def get_version() -> str:
