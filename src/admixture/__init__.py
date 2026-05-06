@@ -28,7 +28,7 @@ def get_version() -> str:
     try:
         return version("admixture")
     except PackageNotFoundError:  # pragma: no cover - only used from source trees.
-        return "0.0.0"  # semantic-release
+        return "0.0.2"  # semantic-release
 
 
 __version__ = get_version()
