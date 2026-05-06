@@ -1,6 +1,13 @@
 # Release Notes
 ---
 
+## [0.0.3](https://github.com/osl-incubator/admixture/compare/0.0.2...0.0.3) (2026-05-06)
+
+
+### Bug Fixes
+
+* Fix __version__ circular import issue ([#2](https://github.com/osl-incubator/admixture/issues/2)) ([6413f55](https://github.com/osl-incubator/admixture/commit/6413f5507770b7e184d3522b393536f461e1eba7))
+
 ## [0.0.2](https://github.com/osl-incubator/admixture/compare/0.0.1...0.0.2) (2026-05-06)
 
 
